@@ -93,9 +93,4 @@ app.whenReady().then(() => {
   // });
 
   bindEvents(win);
-
-  ipcMain.on('sendMessage', (event, args) => {
-    console.log('bbbbbbbbbbbbb', args)
-    win.win.webContents.send('receiveMessage', '文字该' + args)
-  })
 })

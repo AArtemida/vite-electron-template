@@ -1,16 +1,8 @@
 import path from 'path'
 import { BrowserWindow, app, dialog, ipcMain, shell } from 'electron'
-import { getPath, getRecommendTitleFromMarkdownString } from './utils'
-import { writeMarkdownFile } from './markdown'
-import { readFile } from './fileSystem'
+import { readFile, saveFile, saveAsFile } from './fileSystem'
 
 export function bindEvents(win) {
-  ipcMain.on('app-open-files-by-id', (windowId, fileList) => {
-    console.log(windowId, fileList)
-  })
-
-  ipcMain.on('mt::response-file-save', () => {})
-
   // 监听读取文件
   ipcMain.on('app-open-files', fileList => {
     let filePath = fileList[0]
@@ -19,15 +11,19 @@ export function bindEvents(win) {
     })
   })
   // 监听保存获取数据
-  ipcMain.on('get-save-file', () => {
-    console.log('ok ok ok')
-    setTimeout(() => {
-      win.win.webContents.send('send-save-file', 'send')
-    }, 500)
+  ipcMain.on('get-save-file', isDirSave => {
+    //isDirSave 是否另存
+    win.win.webContents.send('send-save-file', isDirSave)
   })
 
-  ipcMain.on('start-save-file', (event, args) => {
-    console.log('=============')
-    console.log(args)
+  // 调用存文件
+  ipcMain.on('start-save-file', (event, args, isDirSave) => {
+    // 另存文件
+    if (isDirSave) {
+      saveAsFile(args)
+    } else {
+      // 保存文件
+      saveFile(args)
+    }
   })
 }

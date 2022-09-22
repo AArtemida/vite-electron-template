@@ -19,7 +19,7 @@ const props = defineProps({
   value: String,
 })
 
-const text = ref('')
+let text = ref('')
 if (props && props.value) {
   text = value
 }
@@ -34,6 +34,10 @@ watch(
   },
   { deep: true }
 )
+
+defineExpose({
+  text,
+})
 </script>
 
 <style lang="scss" scoped>

@@ -52,16 +52,11 @@ let contentText = ref('')
 const editorBox = ref(null)
 
 // 监听保存文件内容
-ipcRenderer.on('send-save-file', () => {
-  console.log('-------------------------------')
+ipcRenderer.on('send-save-file', arg => {
   let dom = editorBox.value
-  let btn = document.getElementById('btn')
-  btn = 'test'
   if (dom) {
-    let v = dom.value
-
-    btn.innerText = v
-    ipcRenderer.send('start-save-file', v)
+    let v = dom.text
+    ipcRenderer.send('start-save-file', v, arg)
   }
 })
 
@@ -70,19 +65,8 @@ ipcRenderer.on('get-md-content', (event, file) => {
   contentText.value = file.toString()
 })
 
-function click() {
-  ipcRenderer.send('sendMessage', 'abc')
-}
-ipcRenderer.on('receiveMessage', (event, args) => {
-  console.log('aaaaaaaaaaaaaaaaaa', args)
-  let btn = document.getElementById('btn')
-  btn.innerText = args
-})
-
 // 改变内容
-const changeText = function (txt) {
-  ipcRenderer.send('send-md-content', txt)
-}
+const changeText = function (txt) {}
 </script>
 
 <style lang="scss" scoped>

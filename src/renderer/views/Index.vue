@@ -2,7 +2,7 @@
   <content class="content">
     <!-- S 左侧列表 -->
     <section class="section-left">
-      <div id="btn" @click="click">发送</div>
+      <!-- <div id="btn" @click="click">发送</div> -->
       <!-- 左侧菜单 -->
       <div class="section-tab">
         <span

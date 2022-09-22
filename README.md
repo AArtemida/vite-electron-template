@@ -1,2 +1,13 @@
 # vite-electron-template
-简单的vite+ts+electron项目
+electron+vite开发的简易版markdown编译器
+
+```
+// 安装依赖
+yarn
+
+// 打包
+yarn build
+
+// 运行
+yarn dev
+```

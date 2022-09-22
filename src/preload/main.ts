@@ -87,6 +87,7 @@ function useLoading() {
 // ----------------------------------------------------------------------
 
 const { appendLoading, removeLoading } = useLoading();
+console.log('预加载执行')
 domReady().then(appendLoading);
 
 window.onmessage = (ev) => {

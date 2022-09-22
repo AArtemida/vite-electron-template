@@ -7,16 +7,17 @@ import electron from 'vite-plugin-electron'
 fs.rmSync('dist', { recursive: true, force: true }) // v14.14.0
 
 export default defineConfig({
+  // base: path.resolve(__dirname, "./dist/"),
   plugins: [
     vue(),
     electron({
       main: {
-        entry: "electron-main/main.ts",
+        entry: "src/main/main.ts",
       },
       preload: {
         input: {
           // Must be use absolute path, this is the restrict of Rollup
-          preload: path.join(__dirname, "electron-preload/main.ts"),
+          preload: path.join(__dirname, "src/preload/main.ts"),
         },
       },
       // Enables use of Node.js API in the Renderer-process
@@ -24,4 +25,10 @@ export default defineConfig({
       renderer: {},
     }),
   ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src/renderer"),
+      "@components": path.resolve(__dirname, "./src/renderer/components"),
+    },
+  },
 });

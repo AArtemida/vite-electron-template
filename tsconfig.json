@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2019",
+    "target": "esnext",
     "module": "CommonJS",
     "esModuleInterop": true,
     "moduleResolution": "Node",
@@ -10,7 +10,9 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
-    "outDir": "dist"
+    "outDir": "dist",
+    "strict": false,
+    "lib": ["esnext", "dom"],
   },
-  "include": ["electron", "src", "vite.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }

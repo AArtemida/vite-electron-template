@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { BrowserWindow, app, dialog, ipcMain, shell } from "electron";
-import { Window } from "../window";
+import { ElWindow } from '../window'
 
 const MARKDOWN_EXTENSIONS = Object.freeze([
   "markdown",
@@ -17,14 +17,14 @@ const MARKDOWN_EXTENSIONS = Object.freeze([
 ]);
 
 /* 保存文件 */
-export function save(win) {
+export function save() {
   // 通知主线程获取数据
   ipcMain.emit('get-save-file', false)
   // win.webContents.send('send-save-file', 'send')
 }
 
 /* 另存文件 */
-export function saveAs(win) {
+export function saveAs() {
   // 通知主线程获取数据
   ipcMain.emit('get-save-file', true)
   // win.webContents.send('send-save-file', 'send')
@@ -32,7 +32,7 @@ export function saveAs(win) {
 
 /* 新建窗口 */
 export const newBlankTab = () => {
-   let win = new Window();
+   let win = new ElWindow()
 
    win.listen();
    win.createWindows({ isMainWin: false });
@@ -45,7 +45,7 @@ export const openFile = async (win) => {
     filters: [
       {
         name: "Markdown document",
-        extensions: MARKDOWN_EXTENSIONS,
+        extensions: ['md'],
       },
     ],
   });

@@ -31,16 +31,19 @@ export const windowsCfg = {
 /**
  * 窗口配置
  */
-export class Window {
-  main: any;
-  group: any;
-  tray: any;
-  win: any;
+// declare class ElWindow {
+//   main: any
+//   group: any
+//   tray: any
+//   win: any
+//   constructor()
+// }
+class ElWindow {
   constructor() {
-    this.main = null; //当前页
-    this.group = {}; //窗口组
-    this.tray = null; //托盘
-    this.win = null;
+    this.main = null //当前页
+    this.group = {} //窗口组
+    this.tray = null //托盘
+    this.win = null
   }
 
   // 窗口配置
@@ -58,22 +61,22 @@ export class Window {
         nodeIntegration: true, //是否支持开启node
         // preload,
       },
-    };
+    }
   }
 
   // 获取窗口
   getWindow(id) {
-    return BrowserWindow.fromId(id);
+    return BrowserWindow.fromId(id)
   }
 
   // 获取全部窗口
   getAllWindows() {
-    return BrowserWindow.getAllWindows();
+    return BrowserWindow.getAllWindows()
   }
 
   // 创建窗口
   createWindows(options) {
-    let args = Object.assign({}, windowsCfg, options);
+    let args = Object.assign({}, windowsCfg, options)
 
     // 判断窗口是否存在
     for (let i in this.group) {
@@ -82,64 +85,64 @@ export class Window {
         this.group[i].route === args.route &&
         !this.group[i].isMultiWindow
       ) {
-        this.getWindow(Number(i)).focus();
-        return;
+        this.getWindow(Number(i)).focus()
+        return
       }
     }
 
-    let opt = this.winOpts([args.width || 800, args.height || 600]);
-    if (args.parentId) {
-      opt.parent = this.getWindow(args.parentId);
-    }
+    let opt = this.winOpts([args.width || 800, args.height || 600])
+    // if (args.parentId) {
+    //   opt.parent = this.getWindow(args.parentId);
+    // }
 
-    if (typeof args.resizable === "boolean") opt.resizable = args.resizable;
+    if (typeof args.resizable === 'boolean') opt.resizable = args.resizable
 
-    this.win = new BrowserWindow(opt);
-    console.log("窗口id：" + this.win.id);
+    this.win = new BrowserWindow(opt)
+    console.log('窗口id：' + this.win.id)
     this.group[this.win.id] = {
       route: args.route,
       isMultiWindow: args.isMultiWindow,
-    };
+    }
     // 是否最大化
     if (args.maximize && args.resizable) {
-      this.win.maximize();
+      this.win.maximize()
     }
     // 是否主窗口
     if (args.isMainWin) {
       if (this.main) {
-        delete this.group[this.main.id];
-        this.main.close();
+        delete this.group[this.main.id]
+        this.main.close()
       }
-      this.main = this.win;
+      this.main = this.win
     }
-    args.id = this.win.id;
-    this.win.on("close", () => this.win.setOpacity(0));
+    args.id = this.win.id
+    this.win.on('close', () => this.win.setOpacity(0))
 
     // if (process.env.WEBPACK_DEV_SERVER_URL) {//开发环境
     // }
     // 如果打包了，渲染index.html
     if (app.isPackaged) {
       // loadfile加载本地文件
-      this.win.loadFile(path.join(ROOT_PATH.dist, "index.html"));
+      this.win.loadFile(path.join(ROOT_PATH.dist, 'index.html'))
     } else {
-      this.win.loadURL(url);
+      this.win.loadURL(url)
       // 打开开发者调试工具
       // if (!process.env.IS_TEST) win.webContents.openDevTools()
     }
 
-    this.win.once("ready-to-show", () => {
-      this.win.show();
-    });
+    this.win.once('ready-to-show', () => {
+      this.win.show()
+    })
 
     // 屏蔽窗口菜单（-webkit-app-region: drag）
     this.win.hookWindowMessage(278, function (e) {
-      this.win.setEnabled(false);
+      this.win.setEnabled(false)
       setTimeout(() => {
-        this.win.setEnabled(true);
-      }, 100);
+        this.win.setEnabled(true)
+      }, 100)
 
-      return true;
-    });
+      return true
+    })
   }
 
   // 关闭所有窗口
@@ -147,9 +150,9 @@ export class Window {
     for (let i in this.group) {
       if (this.group[i]) {
         if (this.getWindow(Number(i))) {
-          this.getWindow(Number(i)).close();
+          this.getWindow(Number(i)).close()
         } else {
-          app.quit();
+          app.quit()
         }
       }
     }
@@ -159,119 +162,126 @@ export class Window {
   createTray() {
     const contextMenu = Menu.buildFromTemplate([
       {
-        label: "显示",
+        label: '显示',
         click: () => {
           for (let i in this.group) {
             if (this.group[i]) {
               // this.getWindow(Number(i)).show()
-              let win = this.getWindow(Number(i));
-              if (!win) return;
-              if (win.isMinimized()) win.restore();
-              win.show();
+              let win = this.getWindow(Number(i))
+              if (!win) return
+              if (win.isMinimized()) win.restore()
+              win.show()
             }
           }
         },
       },
       {
-        label: "退出",
+        label: '退出',
         click: () => {
-          app.quit();
+          app.quit()
         },
       },
-    ]);
-    const trayIco = path.join(__dirname, "../static/logo.png");
-    this.tray = new Tray(trayIco);
-    this.tray.setContextMenu(contextMenu);
-    this.tray.setToolTip(app.name);
+    ])
+    const trayIco = path.join(__dirname, '../static/logo.png')
+    this.tray = new Tray(trayIco)
+    this.tray.setContextMenu(contextMenu)
+    this.tray.setToolTip(app.name)
   }
 
   // 开启监听
   listen() {
     // 关闭
-    ipcMain.on("window-closed", (event, winId) => {
+    ipcMain.on('window-closed', (event, winId) => {
       if (winId) {
-        this.getWindow(Number(winId)).close();
-        if (this.group[Number(winId)]) delete this.group[Number(winId)];
+        this.getWindow(Number(winId)).close()
+        if (this.group[Number(winId)]) delete this.group[Number(winId)]
       } else {
-        this.closeAllWindow();
+        this.closeAllWindow()
       }
-    });
+    })
 
     // 隐藏
-    ipcMain.on("window-hide", (event, winId) => {
+    ipcMain.on('window-hide', (event, winId) => {
       if (winId) {
-        this.getWindow(Number(winId)).hide();
+        this.getWindow(Number(winId)).hide()
       } else {
         for (let i in this.group)
-          if (this.group[i]) this.getWindow(Number(i)).hide();
+          if (this.group[i]) this.getWindow(Number(i)).hide()
       }
-    });
+    })
 
     // 显示
-    ipcMain.on("window-show", (event, winId) => {
+    ipcMain.on('window-show', (event, winId) => {
       if (winId) {
-        this.getWindow(Number(winId)).show();
+        this.getWindow(Number(winId)).show()
       } else {
         for (let i in this.group)
-          if (this.group[i]) this.getWindow(Number(i)).show();
+          if (this.group[i]) this.getWindow(Number(i)).show()
       }
-    });
+    })
 
     // 最小化
-    ipcMain.on("window-mini", (event, winId) => {
+    ipcMain.on('window-mini', (event, winId) => {
       if (winId) {
-        this.getWindow(Number(winId)).minimize();
+        this.getWindow(Number(winId)).minimize()
       } else {
         for (let i in this.group)
-          if (this.group[i]) this.getWindow(Number(i)).minimize();
+          if (this.group[i]) this.getWindow(Number(i)).minimize()
       }
-    });
+    })
 
     // 最大化
-    ipcMain.on("window-max", (event, winId) => {
+    ipcMain.on('window-max', (event, winId) => {
       if (winId) {
-        this.getWindow(Number(winId)).maximize();
+        this.getWindow(Number(winId)).maximize()
       } else {
         for (let i in this.group)
-          if (this.group[i]) this.getWindow(Number(i)).maximize();
+          if (this.group[i]) this.getWindow(Number(i)).maximize()
       }
-    });
+    })
 
     // 最大化/最小化
-    ipcMain.on("window-max-min-size", (event, winId) => {
+    ipcMain.on('window-max-min-size', (event, winId) => {
       if (winId) {
         if (this.getWindow(winId).isMaximized()) {
-          this.getWindow(winId).unmaximize();
+          this.getWindow(winId).unmaximize()
         } else {
-          this.getWindow(winId).maximize();
+          this.getWindow(winId).maximize()
         }
       }
-    });
+    })
 
     // 还原
-    ipcMain.on("window-restore", (event, winId) => {
+    ipcMain.on('window-restore', (event, winId) => {
       if (winId) {
-        this.getWindow(Number(winId)).restore();
+        this.getWindow(Number(winId)).restore()
       } else {
         for (let i in this.group)
-          if (this.group[i]) this.getWindow(Number(i)).restore();
+          if (this.group[i]) this.getWindow(Number(i)).restore()
       }
-    });
+    })
 
     // 重新加载
-    ipcMain.on("window-reload", (event, winId) => {
+    ipcMain.on('window-reload', (event, winId) => {
       if (winId) {
-        this.getWindow(Number(winId)).reload();
+        this.getWindow(Number(winId)).reload()
       } else {
         for (let i in this.group)
-          if (this.group[i]) this.getWindow(Number(i)).reload();
+          if (this.group[i]) this.getWindow(Number(i)).reload()
       }
-    });
+    })
 
     // 创建窗口
-    ipcMain.on("window-new", (event, args) => {
-      console.log("创建窗口");
-      this.createWindows(args);
-    });
+    ipcMain.on('window-new', (event, args) => {
+      console.log('创建窗口')
+      this.createWindows(args)
+    })
   }
+}
+
+
+// @ts-check
+/** @type {{ElWindow: any}} */
+export {
+  ElWindow
 }

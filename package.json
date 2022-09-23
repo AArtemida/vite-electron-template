@@ -1,14 +1,16 @@
 {
-  "name": "vite-electron-template",
+  "name": "vite-electron-markdown",
   "version": "0.0.0",
-  "description": "vite-electron-template",
+  "description": "vite-electron-markdown",
   "main": "dist/electron/main.js",
   "author": "foxmoon",
   "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && electron-builder"
+    "build": "rimraf dist && tsc && vite build && electron-builder",
+    "build:vite": "rimraf release && rimraf dist && tsc && vite build",
+    "build:win": "yarn build:vite && electron-builder --win --ia32"
   },
   "dependencies": {
     "@hfelix/electron-localshortcut": "^4.0.1",

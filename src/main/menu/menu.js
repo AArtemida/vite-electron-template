@@ -6,17 +6,17 @@ import * as actions from "./file";
 
 const RECENTLY_USED_DOCUMENTS_FILE_NAME = "";
 const MAX_RECENTLY_USED_DOCUMENTS = 8;
-class AppMenu {
-  isOsxOrWindows: boolean;
-  _keybindings: any;
-  RECENTS_PATH: any;
+export class AppMenu {
+  // isOsxOrWindows: boolean;
+  // _keybindings: any;
+  // RECENTS_PATH: any;
   constructor(keybindings) {
     this.isOsxOrWindows = isOsx || isWindows;
     this._keybindings = keybindings;
     this.RECENTS_PATH = "C:";
   }
   addMenus() {
-    let template : any = [
+    let template = [
       {
         label: "文件",
         submenu: [
@@ -45,7 +45,7 @@ class AppMenu {
           {
             label: "另存为",
             click(menuItem, browserWindow) {
-              actions.saveAs(browserWindow);
+              actions.saveAs();
             },
           },
           {
@@ -120,4 +120,3 @@ class AppMenu {
   // 更新菜单
   updateAppMenu(recentDocuments) {}
 }
-export default AppMenu;

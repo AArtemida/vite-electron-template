@@ -1,10 +1,10 @@
-import electronLocalshortcut from '@hfelix/electron-localshortcut'
+// import electronLocalshortcut from '@hfelix/electron-localshortcut'
 import { Menu } from 'electron'
 const isMac = process.platform === 'darwin'
 
 /* 快捷键 */
 export default class KeyBindings {
-  keys: any
+  // keys: any
   constructor () {
     this.keys = new Map([
       // File menu
@@ -52,15 +52,15 @@ export default class KeyBindings {
   }
 
   registerKeyHandlers (win, acceleratorMap) {
-    for (const item of acceleratorMap) {
-      const { accelerator } = item
+    // for (const item of acceleratorMap) {
+    //   const { accelerator } = item
 
-      electronLocalshortcut.register(win, accelerator, () => {
-        console.log(`You pressed ${accelerator}`)
-        callMenuCallback(item, win)
-        return true // prevent default action
-      })
-    }
+    //   electronLocalshortcut.register(win, accelerator, () => {
+    //     console.log(`You pressed ${accelerator}`)
+    //     callMenuCallback(item, win)
+    //     return true // prevent default action
+    //   })
+    // }
   }
 }
 

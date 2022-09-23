@@ -1,12 +1,12 @@
 import { join } from 'path'
 import { app, BrowserWindow, ipcMain, Menu, globalShortcut } from 'electron'
-import AppMenu from './menu/menu'
-import keyboard from './keyboard/shortcut'
+import { AppMenu } from './menu/menu'
+// import keyboard from './keyboard/shortcut'
 import { bindEvents } from "./events";
-import { Window } from "./window";
+import { ElWindow } from './window'
 
 let appMenu = new AppMenu({
-  keybindings: keyboard,
+  keybindings: [],
 });
 
 export const ROOT_PATH = {
@@ -24,7 +24,7 @@ const url = process.env['VITE_DEV_SERVER_URL']
 
 // 新建主窗口
 function createWindow() {
-  win = new Window()
+  win = new ElWindow()
 
   win.listen()
   win.createWindows({ isMainWin: true })
@@ -65,9 +65,9 @@ function createWindow() {
   // })
 
   // 注册全局快捷键-打开开发者工具（方便查看问题）
-  // globalShortcut.register('CommandOrControl+alt+shift+l', () => {
-  //   win.win.webContents.openDevTools()
-  // })
+  globalShortcut.register('ctrl+shift+l', () => {
+    win.win.webContents.openDevTools()
+  })
 }
 
 app.on('window-all-closed', () => {
